@@ -1,3 +1,3 @@
 # FlashCards
 
-A simple Java application to aid in studying a foreign language.
+A Java application designed to aid in studying a foreign language.
