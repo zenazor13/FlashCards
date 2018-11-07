@@ -1,4 +1,8 @@
 import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
 
@@ -11,6 +15,7 @@ public class FlashCardsGUI {
 	private JLabel label;
 	private JComboBox comboBoxChapter;
 	private JComboBox comboBoxWord;
+	private JButton buttonExit;
 
 
 	private Vector<Word> wordlist = new Vector<>();
@@ -20,7 +25,7 @@ public class FlashCardsGUI {
 
 	public FlashCardsGUI() {
 
-		setWordlist();
+		setWordlist(true, true, true);
 		resetButtons();
 
 		buttonNext.addActionListener(e -> resetButtons());
@@ -69,7 +74,7 @@ public class FlashCardsGUI {
 				}
 		});
 
-
+		buttonExit.addActionListener(e -> System.exit(0));
 
 	}
 
@@ -78,6 +83,9 @@ public class FlashCardsGUI {
 	private void resetButtons() {
 
 		Random rand = new Random();
+
+
+
 
 		buttonText.clear();
 
@@ -161,35 +169,67 @@ public class FlashCardsGUI {
 
 	}
 
-	private void setWordlist() {
+	private void setWordlist(boolean preposition, boolean verb, boolean noun) {
 
-		/*
-		TODO: 11/6/2018 add way to read from csv
-		*/
 
-		Preposition word1 = new Preposition("durch", "through");
-		Preposition word2 = new Preposition("ohne", "");
-		Preposition word3 = new Preposition("gegen", "against");
-		Preposition word4 = new Preposition("für", "for");
-		Preposition word5 = new Preposition("um", "around");
-		Preposition word6 = new Preposition("mit", "with");
+	String defaultPath = "C:\\Users\\Admin\\IdeaProjects\\FlashCards\\csv";
+	String prepositionPath = defaultPath + "\\Preposition.csv";
+	String verbPath = defaultPath + "\\Verb.csv";
+	String nounPath = defaultPath + "\\Noun.csv";
 
-		Noun word7 = new Noun("der", "Tag", "day");
-		Noun word8 = new Noun("das", "Jahr", "year");
-		Noun word9 = new Noun("die", "Straße", "street, road");
 
-		Adjective word10 = new Adjective("bald", "soon");
 
-		word2.setDefinition("without");
-		wordlist.addElement(word1);
-		wordlist.addElement(word2);
-		wordlist.addElement(word3);
-		wordlist.addElement(word4);
-		wordlist.addElement(word5);
-		wordlist.addElement(word6);
-		wordlist.addElement(word7);
-		wordlist.addElement(word8);
-		wordlist.addElement(word9);
+	String line = "";
+	String csvSplitBy = ",";
+
+	if (preposition) {
+		try (BufferedReader br = new BufferedReader(new FileReader(prepositionPath))) {
+
+			while ((line = br.readLine()) != null) {
+				String[] words = line.split(csvSplitBy);
+
+				Preposition prep = new Preposition(words[0], words[1]);
+				wordlist.addElement(prep);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	if (verb) {
+		try (BufferedReader br = new BufferedReader(new FileReader(verbPath))) {
+
+			while ((line = br.readLine()) != null) {
+				String[] words = line.split(csvSplitBy);
+
+				Verb prep = new Verb(words[0], words[1]);
+				wordlist.addElement(prep);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	if (noun) {
+		try (BufferedReader br = new BufferedReader(new FileReader(nounPath))) {
+
+			while ((line = br.readLine()) != null) {
+				String[] words = line.split(csvSplitBy);
+
+				Noun prep = new Noun(words[0], words[1], words[2]);
+				wordlist.addElement(prep);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	}
 }
