@@ -3,11 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 import java.util.Vector;
-import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Created by Admin on 11/6/2018.
- */
 public class FlashCardsGUI {
 	public JPanel panelMain;
 	private JButton button0;
@@ -15,6 +11,8 @@ public class FlashCardsGUI {
 	private JButton button2;
 	private JButton buttonNext;
 	private JLabel label;
+	private JComboBox comboBoxChapter;
+	private JComboBox comboBox2;
 
 
 	private Vector<Word> wordlist = new Vector();
@@ -26,7 +24,6 @@ public class FlashCardsGUI {
 
 		setWordlist();
 		instantiateButtons();
-		System.out.println(wordlist.size());
 
 		buttonNext.addActionListener(new ActionListener() {
 			@Override
@@ -41,7 +38,10 @@ public class FlashCardsGUI {
 			public void actionPerformed(ActionEvent e) {
 				if (label.getText().equalsIgnoreCase(button[0].getWord())) {
 					button0.setText("Correct!");
+
+					setButtons();
 				}
+
 			}
 		});
 
@@ -50,7 +50,10 @@ public class FlashCardsGUI {
 			public void actionPerformed(ActionEvent e) {
 				if (label.getText().equalsIgnoreCase(button[1].getWord())) {
 					button1.setText("Correct!");
+
+					setButtons();
 				}
+
 			}
 		});
 
@@ -59,7 +62,10 @@ public class FlashCardsGUI {
 			public void actionPerformed(ActionEvent e) {
 				if (label.getText().equalsIgnoreCase(button[2].getWord())) {
 					button2.setText("Correct!");
+
+					setButtons();
 				}
+
 			}
 		});
 
@@ -131,20 +137,15 @@ public class FlashCardsGUI {
 		}
 
 
-/*
-		button0.setText(wordlist.elementAt(1).getWord());
-		button[0] = wordlist.elementAt(1);
-		button1.setText(wordlist.elementAt(2).getWord());
-		button[1] = wordlist.elementAt(2);
-		button2.setText(wordlist.elementAt(3).getWord());
-		button[2] = wordlist.elementAt(3);
-
-		label.setText(wordlist.elementAt(2).getDefinition());
-*/
 
 	}
 
 	private void setWordlist() {
+
+		/*
+		TODO: 11/6/2018 add way to read from csv, to help with implementing various types of words i.e., verbs and nouns- use opencsv?
+		*/
+
 		Word word1 = new Word("durch", "through");
 		Word word2 = new Word("ohne", "without");
 		Word word3 = new Word("gegen", "against");
