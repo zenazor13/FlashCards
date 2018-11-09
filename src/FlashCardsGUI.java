@@ -113,6 +113,7 @@ public class FlashCardsGUI {
 
 		// pick scenario
 		int randScen = rand.nextInt(3);
+		randScen = 2;
 
 		// choose between various output scenarios
 		switch (randScen) {
@@ -133,8 +134,7 @@ public class FlashCardsGUI {
 				break;
 			}
 			case 2: {
-				//pickWord(randDef); pickword is broken
-				resetButtons();
+				pickWord(randDef);
 				break;
 			}
 		}
@@ -236,7 +236,6 @@ public class FlashCardsGUI {
 	}
 
 
-	// TODO: 11/9/2018 fix pickWord 
 	private void pickWord(int randDef) {
 
 		Random rand = new Random();
@@ -252,85 +251,105 @@ public class FlashCardsGUI {
 
 		int randCorrect = rand.nextInt(3);
 
-		//should only set text as a noun if wordlist.elementAt(____) is a noun
-		//not just if randDef is a noun
-
-
 		switch (randCorrect) {
 			case 0: {
 				if (wordlist.elementAt(randDef) instanceof Noun) {
 					button0.setText(((Noun) wordlist.elementAt(randDef)).getArticle()
 							+ " " + wordlist.elementAt(randDef).getWord());
 					buttonText.add(wordlist.elementAt(randDef));
-					button1.setText(((Noun) wordlist.elementAt(rand1)).getArticle()
-							+ " " + wordlist.elementAt(rand1).getWord());
-					buttonText.add(wordlist.elementAt(rand1));
-					button2.setText(((Noun) wordlist.elementAt(rand2)).getArticle()
-							+ " " + wordlist.elementAt(rand2));
-					buttonText.add(wordlist.elementAt(rand2));
-
-					label.setText(wordlist.elementAt(randDef).getDefinition());
 				}
 				else {
 					button0.setText(wordlist.elementAt(randDef).getWord());
 					buttonText.add(wordlist.elementAt(randDef));
-					button1.setText(wordlist.elementAt(rand1).getWord());
-					buttonText.add(wordlist.elementAt(rand1));
-					button2.setText(wordlist.elementAt(rand2).getWord());
-					buttonText.add(wordlist.elementAt(rand2));
-
-					label.setText(wordlist.elementAt(randDef).getDefinition());
 				}
-			}
-			case 1: {
-				if (wordlist.elementAt(randDef) instanceof Noun) {
-					button0.setText(((Noun) wordlist.elementAt(rand1)).getArticle()
+
+				if (wordlist.elementAt(rand1) instanceof Noun) {
+					button1.setText(((Noun) wordlist.elementAt(rand1)).getArticle()
 							+ " " + wordlist.elementAt(rand1).getWord());
 					buttonText.add(wordlist.elementAt(rand1));
-					button1.setText(((Noun) wordlist.elementAt(randDef)).getArticle()
-							+ " " + wordlist.elementAt(randDef).getWord());
-					buttonText.add(wordlist.elementAt(randDef));
+				}
+				else {
+					button1.setText(wordlist.elementAt(rand1).getWord());
+					buttonText.add(wordlist.elementAt(rand1));
+				}
+
+				if (wordlist.elementAt(rand2) instanceof Noun) {
 					button2.setText(((Noun) wordlist.elementAt(rand2)).getArticle()
 							+ " " + wordlist.elementAt(rand2));
 					buttonText.add(wordlist.elementAt(rand2));
-
-					label.setText(wordlist.elementAt(randDef).getDefinition());
 				}
 				else {
-					button0.setText(wordlist.elementAt(rand1).getWord());
-					buttonText.add(wordlist.elementAt(rand1));
-					button1.setText(wordlist.elementAt(randDef).getWord());
-					buttonText.add(wordlist.elementAt(randDef));
 					button2.setText(wordlist.elementAt(rand2).getWord());
 					buttonText.add(wordlist.elementAt(rand2));
-
-					label.setText(wordlist.elementAt(randDef).getDefinition());
 				}
+
+				label.setText(wordlist.elementAt(randDef).getDefinition());
 			}
-			case 2: {
-				if (wordlist.elementAt(randDef) instanceof Noun) {
+			case 1: {
+				if (wordlist.elementAt(rand1) instanceof Noun) {
 					button0.setText(((Noun) wordlist.elementAt(rand1)).getArticle()
 							+ " " + wordlist.elementAt(rand1).getWord());
 					buttonText.add(wordlist.elementAt(rand1));
-					button1.setText(((Noun) wordlist.elementAt(rand2)).getArticle()
-							+ " " + wordlist.elementAt(rand2).getWord());
-					buttonText.add(wordlist.elementAt(rand2));
-					button2.setText(((Noun) wordlist.elementAt(randDef)).getArticle()
-							+ " " + wordlist.elementAt(randDef).getWord());
-					buttonText.add(wordlist.elementAt(randDef));
-
-					label.setText(wordlist.elementAt(randDef).getDefinition());
 				}
 				else {
 					button0.setText(wordlist.elementAt(rand1).getWord());
 					buttonText.add(wordlist.elementAt(rand1));
+				}
+
+				if (wordlist.elementAt(randDef) instanceof Noun) {
+					button1.setText(((Noun) wordlist.elementAt(randDef)).getArticle()
+							+ " " + wordlist.elementAt(randDef).getWord());
+					buttonText.add(wordlist.elementAt(randDef));
+				}
+				else {
+					button1.setText(wordlist.elementAt(randDef).getWord());
+					buttonText.add(wordlist.elementAt(randDef));
+				}
+
+				if (wordlist.elementAt(rand2) instanceof Noun) {
+					button2.setText(((Noun) wordlist.elementAt(rand2)).getArticle()
+							+ " " + wordlist.elementAt(rand2));
+					buttonText.add(wordlist.elementAt(rand2));
+				}
+				else {
+					button2.setText(wordlist.elementAt(rand2).getWord());
+					buttonText.add(wordlist.elementAt(rand2));
+				}
+
+				label.setText(wordlist.elementAt(randDef).getDefinition());
+			}
+			case 2: {
+				if (wordlist.elementAt(rand1) instanceof Noun) {
+					button0.setText(((Noun) wordlist.elementAt(rand1)).getArticle()
+							+ " " + wordlist.elementAt(rand1).getWord());
+					buttonText.add(wordlist.elementAt(rand1));
+				}
+				else {
+					button0.setText(wordlist.elementAt(rand1).getWord());
+					buttonText.add(wordlist.elementAt(rand1));
+				}
+
+				if (wordlist.elementAt(rand2) instanceof Noun) {
+					button1.setText(((Noun) wordlist.elementAt(rand2)).getArticle()
+							+ " " + wordlist.elementAt(rand2).getWord());
+					buttonText.add(wordlist.elementAt(rand2));
+				}
+				else {
 					button1.setText(wordlist.elementAt(rand2).getWord());
 					buttonText.add(wordlist.elementAt(rand2));
+				}
+
+				if (wordlist.elementAt(randDef) instanceof Noun) {
+					button2.setText(((Noun) wordlist.elementAt(randDef)).getArticle()
+							+ " " + wordlist.elementAt(randDef).getWord());
+					buttonText.add(wordlist.elementAt(randDef));
+				}
+				else {
 					button2.setText(wordlist.elementAt(randDef).getWord());
 					buttonText.add(wordlist.elementAt(randDef));
-
-					label.setText(wordlist.elementAt(randDef).getDefinition());
 				}
+
+				label.setText(wordlist.elementAt(randDef).getDefinition());
 			}
 		}
 	}
