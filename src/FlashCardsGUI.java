@@ -113,7 +113,6 @@ public class FlashCardsGUI {
 
 		// pick scenario
 		int randScen = rand.nextInt(3);
-		randScen = 2;
 
 		// choose between various output scenarios
 		switch (randScen) {
