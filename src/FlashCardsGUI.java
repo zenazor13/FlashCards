@@ -133,7 +133,8 @@ public class FlashCardsGUI {
 				break;
 			}
 			case 2: {
-				pickWord(randDef);
+				//pickWord(randDef);
+				resetButtons();
 				break;
 			}
 		}
