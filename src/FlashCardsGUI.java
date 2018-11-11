@@ -51,7 +51,9 @@ public class FlashCardsGUI {
 					}
 				}
 				case "pickWord": {
-
+					if (label.getText().equalsIgnoreCase(buttonText.elementAt(0).getDefinition())) {
+						resetButtons();
+					}
 				}
 			}
 		});
@@ -76,7 +78,9 @@ public class FlashCardsGUI {
 					}
 				}
 				case "pickWord": {
-
+					if (label.getText().equalsIgnoreCase(buttonText.elementAt(1).getDefinition())) {
+						resetButtons();
+					}
 				}
 			}
 		});
@@ -101,7 +105,9 @@ public class FlashCardsGUI {
 					}
 				}
 				case "pickWord": {
-
+					if (label.getText().equalsIgnoreCase(buttonText.elementAt(2).getDefinition())) {
+						resetButtons();
+					}
 				}
 			}
 		});
@@ -152,7 +158,7 @@ public class FlashCardsGUI {
 
 	private void getQuestionType() {
 		Random rand = new Random();
-		int type = rand.nextInt(2);
+		int type = rand.nextInt(3);
 		switch (type) {
 			case 0: {
 				questionType = "pickArticle";
@@ -300,15 +306,14 @@ public class FlashCardsGUI {
 
 				if (wordlist.elementAt(rand2) instanceof Noun) {
 					button2.setText(((Noun) wordlist.elementAt(rand2)).getArticle()
-							+ " " + wordlist.elementAt(rand2));
-					buttonText.add(wordlist.elementAt(rand2));
+							+ " " + wordlist.elementAt(rand2).getWord());
 				}
 				else {
 					button2.setText(wordlist.elementAt(rand2).getWord());
 					buttonText.add(wordlist.elementAt(rand2));
 				}
-
 				label.setText(wordlist.elementAt(randWord).getDefinition());
+				break;
 			}
 			case 1: {
 				if (wordlist.elementAt(rand1) instanceof Noun) {
@@ -333,7 +338,7 @@ public class FlashCardsGUI {
 
 				if (wordlist.elementAt(rand2) instanceof Noun) {
 					button2.setText(((Noun) wordlist.elementAt(rand2)).getArticle()
-							+ " " + wordlist.elementAt(rand2));
+							+ " " + wordlist.elementAt(rand2).getWord());
 					buttonText.add(wordlist.elementAt(rand2));
 				}
 				else {
@@ -342,6 +347,7 @@ public class FlashCardsGUI {
 				}
 
 				label.setText(wordlist.elementAt(randWord).getDefinition());
+				break;
 			}
 			case 2: {
 				if (wordlist.elementAt(rand1) instanceof Noun) {
@@ -375,6 +381,7 @@ public class FlashCardsGUI {
 				}
 
 				label.setText(wordlist.elementAt(randWord).getDefinition());
+				break;
 			}
 		}
 	}
