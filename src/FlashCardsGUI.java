@@ -13,15 +13,13 @@ public class FlashCardsGUI {
 	private JButton button2;
 	private JButton buttonNext;
 	private JLabel label;
-	private JComboBox comboBoxChapter;
-	private JComboBox comboBoxWord;
 	private JButton buttonExit;
-	private JLabel labelRight;
-	private JLabel labelWrong;
 
+	// TODO: 11/11/2018 add separate panels for each type of question to simplify button action listeners
 
 	private Vector<Word> wordlist = new Vector<>();
-	private Vector<Word> buttonText = new Vector<>();	//keeps track of what words are used where, for checking answers
+	private Vector<Word> buttonText = new Vector<>(); //keeps track of what words are used where, for checking answers
+	private String questionType;
 
 
 
@@ -33,68 +31,80 @@ public class FlashCardsGUI {
 		buttonNext.addActionListener(e -> resetButtons());
 
 
-		//button listeners for pickDefinition cases
-
 		button0.addActionListener(e -> {
-
-			if (buttonText.elementAt(0) instanceof Noun) {
-				if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(0)).getArticle()
-						+ " " + buttonText.elementAt(0).getWord())) {
-					resetButtons();
+			switch (questionType) {
+				case "pickArticle": {
+					if (button0.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(0)).getArticle()
+							+ " " + buttonText.elementAt(0).getWord())) {
+						resetButtons();
+					}
 				}
-				else if (button0.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(0)).getArticle()
-						+ " " + buttonText.elementAt(0).getWord())) {
-					resetButtons();
+				case "pickDefinition": {
+					if (buttonText.elementAt(0) instanceof Noun) {
+						if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(0)).getArticle()
+								+ " " + buttonText.elementAt(0).getWord())) {
+							resetButtons();
+						}
+					}
+					if (label.getText().equalsIgnoreCase(buttonText.elementAt(0).getWord())) {
+						resetButtons();
+					}
+				}
+				case "pickWord": {
+
 				}
 			}
-			else if (label.getText().equalsIgnoreCase(buttonText.elementAt(0).getWord())) {
-				resetButtons();
-			}
-
-
-
 		});
 
 		button1.addActionListener(e -> {
-
-			if (buttonText.elementAt(1) instanceof Noun) {
-				if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(1)).getArticle()
-						+ " " + buttonText.elementAt(1).getWord())) {
-					resetButtons();
+			switch (questionType) {
+				case "pickArticle": {
+					if (button1.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(1)).getArticle()
+							+ " " + buttonText.elementAt(1).getWord())) {
+						resetButtons();
+					}
 				}
-				else if (button1.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(1)).getArticle()
-						+ " " + buttonText.elementAt(1).getWord())) {
-					resetButtons();
+				case "pickDefinition": {
+					if (buttonText.elementAt(1) instanceof Noun) {
+						if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(1)).getArticle()
+								+ " " + buttonText.elementAt(1).getWord())) {
+							resetButtons();
+						}
+					}
+					if (label.getText().equalsIgnoreCase(buttonText.elementAt(1).getWord())) {
+						resetButtons();
+					}
+				}
+				case "pickWord": {
+
 				}
 			}
-			else if (label.getText().equalsIgnoreCase(buttonText.elementAt(1).getWord())) {
-				resetButtons();
-			}
-
-
-
 		});
 
 		button2.addActionListener(e -> {
-
-			if (buttonText.elementAt(2) instanceof Noun) {
-				if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(2)).getArticle()
-						+ " " + buttonText.elementAt(2).getWord())) {
-					resetButtons();
+			switch (questionType) {
+				case "pickArticle": {
+					if (button2.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(2)).getArticle()
+							+ " " + buttonText.elementAt(2).getWord())) {
+						resetButtons();
+					}
 				}
-				else if (button2.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(2)).getArticle()
-						+ " " + buttonText.elementAt(2).getWord())) {
-					resetButtons();
+				case "pickDefinition": {
+					if (buttonText.elementAt(2) instanceof Noun) {
+						if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(2)).getArticle()
+								+ " " + buttonText.elementAt(2).getWord())) {
+							resetButtons();
+						}
+					}
+					if (label.getText().equalsIgnoreCase(buttonText.elementAt(2).getWord())) {
+						resetButtons();
+					}
+				}
+				case "pickWord": {
+
 				}
 			}
-			else if (label.getText().equalsIgnoreCase(buttonText.elementAt(2).getWord())) {
-				resetButtons();
-			}
-
-
-
 		});
-
 
 
 		buttonExit.addActionListener(e -> System.exit(0));
@@ -108,54 +118,70 @@ public class FlashCardsGUI {
 
 		buttonText.clear();
 
-		// pick word on list to get definition for
-		int randDef = rand.nextInt(wordlist.size());
+		// pick word on list to be the answer
+		int randWord = rand.nextInt(wordlist.size());
 
 		// pick scenario
-		int randScen = rand.nextInt(3);
+		getQuestionType();
 
 		// choose between various output scenarios
-		switch (randScen) {
-			case 0: {
-				if (wordlist.elementAt(randDef) instanceof Noun) {
-					if (((Noun) wordlist.elementAt(randDef)).getArticle().equalsIgnoreCase(" ")) {
+		switch (questionType) {
+			case "pickArticle": {
+				if (wordlist.elementAt(randWord) instanceof Noun) {
+					if (((Noun) wordlist.elementAt(randWord)).getArticle().equalsIgnoreCase(" ")) {
 						resetButtons();
 					}
-					pickArticle(randDef);
+					pickArticle(randWord);
 				}
 				else {
 					resetButtons();
 				}
 				break;
 			}
-			case 1: {
-				pickDefinition(randDef);
+			case "pickDefinition": {
+				pickDefinition(randWord);
 				break;
 			}
-			case 2: {
-				//pickWord(randDef);
-				resetButtons();
+			case "pickWord": {
+				pickWord(randWord);
+				//resetButtons();
 				break;
 			}
 		}
-
-
-
-
-	}
-	private void pickArticle(int randDef) {
-
-		button0.setText("der " + wordlist.elementAt(randDef).getWord());
-		buttonText.add(wordlist.elementAt(randDef));
-		button1.setText("die " + wordlist.elementAt(randDef).getWord());
-		buttonText.add(wordlist.elementAt(randDef));
-		button2.setText("das " + wordlist.elementAt(randDef).getWord());
-		buttonText.add(wordlist.elementAt(randDef));
-
-		label.setText(wordlist.elementAt(randDef).getDefinition());
 	}
 
-	private void pickDefinition(int randDef) {
+	private void getQuestionType() {
+		Random rand = new Random();
+		int type = rand.nextInt(2);
+		switch (type) {
+			case 0: {
+				questionType = "pickArticle";
+				break;
+			}
+			case 1: {
+				questionType = "pickDefinition";
+				break;
+			}
+			case 2: {
+				questionType = "pickWord";
+				break;
+			}
+		}
+	}
+
+	private void pickArticle(int randWord) {
+
+		button0.setText("der " + wordlist.elementAt(randWord).getWord());
+		buttonText.add(wordlist.elementAt(randWord));
+		button1.setText("die " + wordlist.elementAt(randWord).getWord());
+		buttonText.add(wordlist.elementAt(randWord));
+		button2.setText("das " + wordlist.elementAt(randWord).getWord());
+		buttonText.add(wordlist.elementAt(randWord));
+
+		label.setText(wordlist.elementAt(randWord).getDefinition());
+	}
+
+	private void pickDefinition(int randWord) {
 
 		Random rand = new Random();
 
@@ -164,7 +190,7 @@ public class FlashCardsGUI {
 		int rand2 = rand.nextInt(wordlist.size());
 
 
-		while (rand1 == randDef || rand2 == randDef || rand1 == rand2) {
+		while (rand1 == randWord || rand2 == randWord || rand1 == rand2) {
 			rand1 = rand.nextInt(wordlist.size());
 			rand2 = rand.nextInt(wordlist.size());
 		}
@@ -174,19 +200,19 @@ public class FlashCardsGUI {
 
 		switch (randCorrect) {
 			case 0: {
-				button0.setText(wordlist.elementAt(randDef).getDefinition());
-				buttonText.add(wordlist.elementAt(randDef));
+				button0.setText(wordlist.elementAt(randWord).getDefinition());
+				buttonText.add(wordlist.elementAt(randWord));
 				button1.setText(wordlist.elementAt(rand1).getDefinition());
 				buttonText.add(wordlist.elementAt(rand1));
 				button2.setText(wordlist.elementAt(rand2).getDefinition());
 				buttonText.add(wordlist.elementAt(rand2));
 
-				if (wordlist.elementAt(randDef) instanceof Noun) {
-					label.setText(((Noun) wordlist.elementAt(randDef)).getArticle() + " " +
-							wordlist.elementAt(randDef).getWord());
+				if (wordlist.elementAt(randWord) instanceof Noun) {
+					label.setText(((Noun) wordlist.elementAt(randWord)).getArticle() + " " +
+							wordlist.elementAt(randWord).getWord());
 				}
 				else {
-					label.setText(wordlist.elementAt(randDef).getWord());
+					label.setText(wordlist.elementAt(randWord).getWord());
 				}
 
 				break;
@@ -194,17 +220,17 @@ public class FlashCardsGUI {
 			case 1: {
 				button0.setText(wordlist.elementAt(rand1).getDefinition());
 				buttonText.add(wordlist.elementAt(rand1));
-				button1.setText(wordlist.elementAt(randDef).getDefinition());
-				buttonText.add(wordlist.elementAt(randDef));
+				button1.setText(wordlist.elementAt(randWord).getDefinition());
+				buttonText.add(wordlist.elementAt(randWord));
 				button2.setText(wordlist.elementAt(rand2).getDefinition());
 				buttonText.add(wordlist.elementAt(rand2));
 
-				if (wordlist.elementAt(randDef) instanceof Noun) {
-					label.setText(((Noun) wordlist.elementAt(randDef)).getArticle() + " " +
-							wordlist.elementAt(randDef).getWord());
+				if (wordlist.elementAt(randWord) instanceof Noun) {
+					label.setText(((Noun) wordlist.elementAt(randWord)).getArticle() + " " +
+							wordlist.elementAt(randWord).getWord());
 				}
 				else {
-					label.setText(wordlist.elementAt(randDef).getWord());
+					label.setText(wordlist.elementAt(randWord).getWord());
 				}
 
 				break;
@@ -214,15 +240,15 @@ public class FlashCardsGUI {
 				buttonText.add(wordlist.elementAt(rand1));
 				button1.setText(wordlist.elementAt(rand2).getDefinition());
 				buttonText.add(wordlist.elementAt(rand2));
-				button2.setText(wordlist.elementAt(randDef).getDefinition());
-				buttonText.add(wordlist.elementAt(randDef));
+				button2.setText(wordlist.elementAt(randWord).getDefinition());
+				buttonText.add(wordlist.elementAt(randWord));
 
-				if (wordlist.elementAt(randDef) instanceof Noun) {
-					label.setText(((Noun) wordlist.elementAt(randDef)).getArticle() + " " +
-							wordlist.elementAt(randDef).getWord());
+				if (wordlist.elementAt(randWord) instanceof Noun) {
+					label.setText(((Noun) wordlist.elementAt(randWord)).getArticle() + " " +
+							wordlist.elementAt(randWord).getWord());
 				}
 				else {
-					label.setText(wordlist.elementAt(randDef).getWord());
+					label.setText(wordlist.elementAt(randWord).getWord());
 				}
 
 				break;
@@ -235,8 +261,7 @@ public class FlashCardsGUI {
 
 	}
 
-
-	private void pickWord(int randDef) {
+	private void pickWord(int randWord) {
 
 		Random rand = new Random();
 
@@ -244,7 +269,7 @@ public class FlashCardsGUI {
 		int rand1 = rand.nextInt(wordlist.size());
 		int rand2 = rand.nextInt(wordlist.size());
 
-		while (rand1 == randDef || rand2 == randDef || rand1 == rand2) {
+		while (rand1 == randWord || rand2 == randWord || rand1 == rand2) {
 			rand1 = rand.nextInt(wordlist.size());
 			rand2 = rand.nextInt(wordlist.size());
 		}
@@ -253,14 +278,14 @@ public class FlashCardsGUI {
 
 		switch (randCorrect) {
 			case 0: {
-				if (wordlist.elementAt(randDef) instanceof Noun) {
-					button0.setText(((Noun) wordlist.elementAt(randDef)).getArticle()
-							+ " " + wordlist.elementAt(randDef).getWord());
-					buttonText.add(wordlist.elementAt(randDef));
+				if (wordlist.elementAt(randWord) instanceof Noun) {
+					button0.setText(((Noun) wordlist.elementAt(randWord)).getArticle()
+							+ " " + wordlist.elementAt(randWord).getWord());
+					buttonText.add(wordlist.elementAt(randWord));
 				}
 				else {
-					button0.setText(wordlist.elementAt(randDef).getWord());
-					buttonText.add(wordlist.elementAt(randDef));
+					button0.setText(wordlist.elementAt(randWord).getWord());
+					buttonText.add(wordlist.elementAt(randWord));
 				}
 
 				if (wordlist.elementAt(rand1) instanceof Noun) {
@@ -283,7 +308,7 @@ public class FlashCardsGUI {
 					buttonText.add(wordlist.elementAt(rand2));
 				}
 
-				label.setText(wordlist.elementAt(randDef).getDefinition());
+				label.setText(wordlist.elementAt(randWord).getDefinition());
 			}
 			case 1: {
 				if (wordlist.elementAt(rand1) instanceof Noun) {
@@ -296,14 +321,14 @@ public class FlashCardsGUI {
 					buttonText.add(wordlist.elementAt(rand1));
 				}
 
-				if (wordlist.elementAt(randDef) instanceof Noun) {
-					button1.setText(((Noun) wordlist.elementAt(randDef)).getArticle()
-							+ " " + wordlist.elementAt(randDef).getWord());
-					buttonText.add(wordlist.elementAt(randDef));
+				if (wordlist.elementAt(randWord) instanceof Noun) {
+					button1.setText(((Noun) wordlist.elementAt(randWord)).getArticle()
+							+ " " + wordlist.elementAt(randWord).getWord());
+					buttonText.add(wordlist.elementAt(randWord));
 				}
 				else {
-					button1.setText(wordlist.elementAt(randDef).getWord());
-					buttonText.add(wordlist.elementAt(randDef));
+					button1.setText(wordlist.elementAt(randWord).getWord());
+					buttonText.add(wordlist.elementAt(randWord));
 				}
 
 				if (wordlist.elementAt(rand2) instanceof Noun) {
@@ -316,7 +341,7 @@ public class FlashCardsGUI {
 					buttonText.add(wordlist.elementAt(rand2));
 				}
 
-				label.setText(wordlist.elementAt(randDef).getDefinition());
+				label.setText(wordlist.elementAt(randWord).getDefinition());
 			}
 			case 2: {
 				if (wordlist.elementAt(rand1) instanceof Noun) {
@@ -339,17 +364,17 @@ public class FlashCardsGUI {
 					buttonText.add(wordlist.elementAt(rand2));
 				}
 
-				if (wordlist.elementAt(randDef) instanceof Noun) {
-					button2.setText(((Noun) wordlist.elementAt(randDef)).getArticle()
-							+ " " + wordlist.elementAt(randDef).getWord());
-					buttonText.add(wordlist.elementAt(randDef));
+				if (wordlist.elementAt(randWord) instanceof Noun) {
+					button2.setText(((Noun) wordlist.elementAt(randWord)).getArticle()
+							+ " " + wordlist.elementAt(randWord).getWord());
+					buttonText.add(wordlist.elementAt(randWord));
 				}
 				else {
-					button2.setText(wordlist.elementAt(randDef).getWord());
-					buttonText.add(wordlist.elementAt(randDef));
+					button2.setText(wordlist.elementAt(randWord).getWord());
+					buttonText.add(wordlist.elementAt(randWord));
 				}
 
-				label.setText(wordlist.elementAt(randDef).getDefinition());
+				label.setText(wordlist.elementAt(randWord).getDefinition());
 			}
 		}
 	}
