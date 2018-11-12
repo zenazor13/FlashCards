@@ -1,3 +1,7 @@
+package words;
+
+import words.Word;
+
 public class Adjective extends Word {
 
 	public Adjective(String word, String definition) {

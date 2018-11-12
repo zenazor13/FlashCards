@@ -1,3 +1,8 @@
+import words.Noun;
+import words.Preposition;
+import words.Verb;
+import words.Word;
+
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -34,28 +39,15 @@ public class FlashCardsGUI {
 		button0.addActionListener(e -> {
 			switch (questionType) {
 				case "pickArticle": {
-					if ("der".equalsIgnoreCase(((Noun) buttonText.elementAt(0)).getArticle())) {
-						System.out.println(((Noun) buttonText.elementAt(0)).getArticle());
-						resetButtons();
-					}
+					checkArticle(0);
 					break;
 				}
 				case "pickDefinition": {
-					if (buttonText.elementAt(0) instanceof Noun) {
-						if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(0)).getArticle()
-								+ " " + buttonText.elementAt(0).getWord())) {
-							resetButtons();
-						}
-					}
-					if (label.getText().equalsIgnoreCase(buttonText.elementAt(0).getWord())) {
-						resetButtons();
-					}
+					checkDefinition(0);
 					break;
 				}
 				case "pickWord": {
-					if (label.getText().equalsIgnoreCase(buttonText.elementAt(0).getDefinition())) {
-						resetButtons();
-					}
+					checkWord(0);
 					break;
 				}
 			}
@@ -64,28 +56,15 @@ public class FlashCardsGUI {
 		button1.addActionListener(e -> {
 			switch (questionType) {
 				case "pickArticle": {
-					if ("die".equalsIgnoreCase(((Noun) buttonText.elementAt(1)).getArticle())) {
-						System.out.println(((Noun) buttonText.elementAt(1)).getArticle());
-						resetButtons();
-					}
+					checkArticle(1);
 					break;
 				}
 				case "pickDefinition": {
-					if (buttonText.elementAt(1) instanceof Noun) {
-						if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(1)).getArticle()
-								+ " " + buttonText.elementAt(1).getWord())) {
-							resetButtons();
-						}
-					}
-					if (label.getText().equalsIgnoreCase(buttonText.elementAt(1).getWord())) {
-						resetButtons();
-					}
+					checkDefinition(1);
 					break;
 				}
 				case "pickWord": {
-					if (label.getText().equalsIgnoreCase(buttonText.elementAt(1).getDefinition())) {
-						resetButtons();
-					}
+					checkWord(1);
 					break;
 				}
 			}
@@ -94,29 +73,15 @@ public class FlashCardsGUI {
 		button2.addActionListener(e -> {
 			switch (questionType) {
 				case "pickArticle": {
-					if ("das".equalsIgnoreCase(((Noun) buttonText.elementAt(2)).getArticle())) {
-						System.out.println(((Noun) buttonText.elementAt(2)).getArticle());
-
-						resetButtons();
-					}
+					checkArticle(2);
 					break;
 				}
 				case "pickDefinition": {
-					if (buttonText.elementAt(2) instanceof Noun) {
-						if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(2)).getArticle()
-								+ " " + buttonText.elementAt(2).getWord())) {
-							resetButtons();
-						}
-					}
-					if (label.getText().equalsIgnoreCase(buttonText.elementAt(2).getWord())) {
-						resetButtons();
-					}
+					checkDefinition(2);
 					break;
 				}
 				case "pickWord": {
-					if (label.getText().equalsIgnoreCase(buttonText.elementAt(2).getDefinition())) {
-						resetButtons();
-					}
+					checkWord(2);
 					break;
 				}
 			}
@@ -127,7 +92,7 @@ public class FlashCardsGUI {
 
 	}
 
-	 
+
 	private void resetButtons() {
 
 		Random rand = new Random();
@@ -392,6 +357,47 @@ public class FlashCardsGUI {
 				label.setText(wordlist.elementAt(randWord).getDefinition());
 				break;
 			}
+		}
+	}
+
+	private void checkArticle(int element) {
+		switch (element) {
+			case 0: {
+				if ("der".equalsIgnoreCase(((Noun) buttonText.elementAt(element)).getArticle())) {
+					resetButtons();
+				}
+				break;
+			}
+			case 1: {
+				if ("die".equalsIgnoreCase(((Noun) buttonText.elementAt(element)).getArticle())) {
+					resetButtons();
+				}
+				break;
+			}
+			case 2: {
+				if ("das".equalsIgnoreCase(((Noun) buttonText.elementAt(element)).getArticle())) {
+					resetButtons();
+				}
+				break;
+			}
+		}
+	}
+
+	private void checkDefinition(int element) {
+		if (buttonText.elementAt(element) instanceof Noun) {
+			if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(element)).getArticle()
+					+ " " + buttonText.elementAt(element).getWord())) {
+				resetButtons();
+			}
+		}
+		if (label.getText().equalsIgnoreCase(buttonText.elementAt(element).getWord())) {
+			resetButtons();
+		}
+	}
+
+	private void checkWord(int element) {
+		if (label.getText().equalsIgnoreCase(buttonText.elementAt(element).getDefinition())) {
+			resetButtons();
 		}
 	}
 

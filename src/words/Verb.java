@@ -1,3 +1,7 @@
+package words;
+
+import words.Word;
+
 public class Verb extends Word {
 
 	//add options for conjugations?
