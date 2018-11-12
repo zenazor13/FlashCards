@@ -18,14 +18,14 @@ public class FlashCardsGUI {
 	// TODO: 11/11/2018 add separate panels for each type of question to simplify button action listeners
 
 	private Vector<Word> wordlist = new Vector<>();
-	private Vector<Word> buttonText = new Vector<>(); //keeps track of what words are used where, for checking answers
+	private Vector<Word> buttonText = new Vector<>(); //keeps track of what words are used on which button
 	private String questionType;
 
 
 
 	public FlashCardsGUI() {
 
-		setWordlist(true, false, true);
+		setWordlist(false, false, true);
 		resetButtons();
 
 		buttonNext.addActionListener(e -> resetButtons());
@@ -34,10 +34,11 @@ public class FlashCardsGUI {
 		button0.addActionListener(e -> {
 			switch (questionType) {
 				case "pickArticle": {
-					if (button0.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(0)).getArticle()
-							+ " " + buttonText.elementAt(0).getWord())) {
+					if ("der".equalsIgnoreCase(((Noun) buttonText.elementAt(0)).getArticle())) {
+						System.out.println(((Noun) buttonText.elementAt(0)).getArticle());
 						resetButtons();
 					}
+					break;
 				}
 				case "pickDefinition": {
 					if (buttonText.elementAt(0) instanceof Noun) {
@@ -49,11 +50,13 @@ public class FlashCardsGUI {
 					if (label.getText().equalsIgnoreCase(buttonText.elementAt(0).getWord())) {
 						resetButtons();
 					}
+					break;
 				}
 				case "pickWord": {
 					if (label.getText().equalsIgnoreCase(buttonText.elementAt(0).getDefinition())) {
 						resetButtons();
 					}
+					break;
 				}
 			}
 		});
@@ -61,10 +64,11 @@ public class FlashCardsGUI {
 		button1.addActionListener(e -> {
 			switch (questionType) {
 				case "pickArticle": {
-					if (button1.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(1)).getArticle()
-							+ " " + buttonText.elementAt(1).getWord())) {
+					if ("die".equalsIgnoreCase(((Noun) buttonText.elementAt(1)).getArticle())) {
+						System.out.println(((Noun) buttonText.elementAt(1)).getArticle());
 						resetButtons();
 					}
+					break;
 				}
 				case "pickDefinition": {
 					if (buttonText.elementAt(1) instanceof Noun) {
@@ -76,11 +80,13 @@ public class FlashCardsGUI {
 					if (label.getText().equalsIgnoreCase(buttonText.elementAt(1).getWord())) {
 						resetButtons();
 					}
+					break;
 				}
 				case "pickWord": {
 					if (label.getText().equalsIgnoreCase(buttonText.elementAt(1).getDefinition())) {
 						resetButtons();
 					}
+					break;
 				}
 			}
 		});
@@ -88,10 +94,12 @@ public class FlashCardsGUI {
 		button2.addActionListener(e -> {
 			switch (questionType) {
 				case "pickArticle": {
-					if (button2.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(2)).getArticle()
-							+ " " + buttonText.elementAt(2).getWord())) {
+					if ("das".equalsIgnoreCase(((Noun) buttonText.elementAt(2)).getArticle())) {
+						System.out.println(((Noun) buttonText.elementAt(2)).getArticle());
+
 						resetButtons();
 					}
+					break;
 				}
 				case "pickDefinition": {
 					if (buttonText.elementAt(2) instanceof Noun) {
@@ -103,11 +111,13 @@ public class FlashCardsGUI {
 					if (label.getText().equalsIgnoreCase(buttonText.elementAt(2).getWord())) {
 						resetButtons();
 					}
+					break;
 				}
 				case "pickWord": {
 					if (label.getText().equalsIgnoreCase(buttonText.elementAt(2).getDefinition())) {
 						resetButtons();
 					}
+					break;
 				}
 			}
 		});
@@ -150,7 +160,6 @@ public class FlashCardsGUI {
 			}
 			case "pickWord": {
 				pickWord(randWord);
-				//resetButtons();
 				break;
 			}
 		}
@@ -405,8 +414,8 @@ public class FlashCardsGUI {
 			while ((line = br.readLine()) != null) {
 				String[] words = line.split(csvSplitBy);
 
-				Preposition prep = new Preposition(words[0], words[1]);
-				wordlist.addElement(prep);
+				Preposition p = new Preposition(words[0], words[1]);
+				wordlist.addElement(p);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -421,8 +430,8 @@ public class FlashCardsGUI {
 			while ((line = br.readLine()) != null) {
 				String[] words = line.split(csvSplitBy);
 
-				Verb prep = new Verb(words[0], words[1]);
-				wordlist.addElement(prep);
+				Verb v = new Verb(words[0], words[1]);
+				wordlist.addElement(v);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -437,8 +446,8 @@ public class FlashCardsGUI {
 			while ((line = br.readLine()) != null) {
 				String[] words = line.split(csvSplitBy);
 
-				Noun prep = new Noun(words[0], words[1], words[2]);
-				wordlist.addElement(prep);
+				Noun n = new Noun(words[0], words[1], words[2]);
+				wordlist.addElement(n);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
