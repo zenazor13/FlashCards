@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Vector;
 
@@ -19,88 +20,48 @@ public class FlashCardsGUI {
 	private JButton buttonNext;
 	private JLabel label;
 	private JButton buttonExit;
+	private JLabel timesCorrect;
+	private JLabel wordsLeft;
 
 	// TODO: 11/11/2018 add separate panels for each type of question to simplify button action listeners
 
 	private Vector<Word> wordlist = new Vector<>();
 	private Vector<Word> buttonText = new Vector<>(); //keeps track of what words are used on which button
+	private Word correctWord = new Word();
 	private String questionType;
+	private HashMap<Word, Integer> wordmap = new HashMap<>();
 
 
 
 	public FlashCardsGUI() {
 
-		setWordlist(false, false, true);
+		setWordlist(true, true, true);
+		setWordmap();
 		resetButtons();
 
 		buttonNext.addActionListener(e -> resetButtons());
 
+		button0.addActionListener(e -> checkCorrect(0));
 
-		button0.addActionListener(e -> {
-			switch (questionType) {
-				case "pickArticle": {
-					checkArticle(0);
-					break;
-				}
-				case "pickDefinition": {
-					checkDefinition(0);
-					break;
-				}
-				case "pickWord": {
-					checkWord(0);
-					break;
-				}
-			}
-		});
+		button1.addActionListener(e -> checkCorrect(1));
 
-		button1.addActionListener(e -> {
-			switch (questionType) {
-				case "pickArticle": {
-					checkArticle(1);
-					break;
-				}
-				case "pickDefinition": {
-					checkDefinition(1);
-					break;
-				}
-				case "pickWord": {
-					checkWord(1);
-					break;
-				}
-			}
-		});
-
-		button2.addActionListener(e -> {
-			switch (questionType) {
-				case "pickArticle": {
-					checkArticle(2);
-					break;
-				}
-				case "pickDefinition": {
-					checkDefinition(2);
-					break;
-				}
-				case "pickWord": {
-					checkWord(2);
-					break;
-				}
-			}
-		});
-
+		button2.addActionListener(e -> checkCorrect(2));
 
 		buttonExit.addActionListener(e -> System.exit(0));
 
 	}
 
-
 	private void resetButtons() {
 
 		Random rand = new Random();
+		System.out.println(wordmap.values());
+		System.out.println(wordlist.size());
 
 		buttonText.clear();
 
 		// pick word on list to be the answer
 		int randWord = rand.nextInt(wordlist.size());
+		correctWord = wordlist.elementAt(randWord);
 
 		// pick scenario
 		getQuestionType();
@@ -159,6 +120,10 @@ public class FlashCardsGUI {
 		buttonText.add(wordlist.elementAt(randWord));
 
 		label.setText(wordlist.elementAt(randWord).getDefinition());
+
+		timesCorrect.setText("Times correct: " + wordmap.get(correctWord));
+		wordsLeft.setText("Words left: " + (wordlist.size() - 2));
+
 	}
 
 	private void pickDefinition(int randWord) {
@@ -238,6 +203,8 @@ public class FlashCardsGUI {
 			}
 		}
 
+		timesCorrect.setText("Times correct: " + wordmap.get(correctWord));
+		wordsLeft.setText("Words left: " + (wordlist.size() - 2));
 
 	}
 
@@ -358,46 +325,27 @@ public class FlashCardsGUI {
 				break;
 			}
 		}
+
+		timesCorrect.setText("Times correct: " + wordmap.get(correctWord));
+		wordsLeft.setText("Words left: " + (wordlist.size() - 2));
 	}
 
-	private void checkArticle(int element) {
-		switch (element) {
-			case 0: {
-				if ("der".equalsIgnoreCase(((Noun) buttonText.elementAt(element)).getArticle())) {
-					resetButtons();
-				}
-				break;
-			}
-			case 1: {
-				if ("die".equalsIgnoreCase(((Noun) buttonText.elementAt(element)).getArticle())) {
-					resetButtons();
-				}
-				break;
-			}
-			case 2: {
-				if ("das".equalsIgnoreCase(((Noun) buttonText.elementAt(element)).getArticle())) {
-					resetButtons();
-				}
-				break;
-			}
-		}
-	}
+	private void checkCorrect(int element) {
+		if (buttonText.elementAt(element).equals(correctWord)) {
+			wordmap.put(correctWord, wordmap.get(correctWord) + 1);
 
-	private void checkDefinition(int element) {
-		if (buttonText.elementAt(element) instanceof Noun) {
-			if (label.getText().equalsIgnoreCase(((Noun) buttonText.elementAt(element)).getArticle()
-					+ " " + buttonText.elementAt(element).getWord())) {
-				resetButtons();
+			if (wordmap.get(correctWord) == 5) {
+				wordlist.removeElement(correctWord);
 			}
-		}
-		if (label.getText().equalsIgnoreCase(buttonText.elementAt(element).getWord())) {
+
+			if (wordlist.size() < 3) {
+				System.out.println("You win");
+				System.exit(0);
+			}
 			resetButtons();
 		}
-	}
-
-	private void checkWord(int element) {
-		if (label.getText().equalsIgnoreCase(buttonText.elementAt(element).getDefinition())) {
-			resetButtons();
+		else {
+			wordmap.put(buttonText.elementAt(element), 0);
 		}
 	}
 
@@ -464,4 +412,12 @@ public class FlashCardsGUI {
 
 
 	}
+
+	private void setWordmap() {
+		for (Word w : wordlist) {
+			wordmap.put(w, 0);
+		}
+	}
+
+
 }
