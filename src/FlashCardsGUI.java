@@ -18,12 +18,10 @@ public class FlashCardsGUI {
 	private JButton button1;
 	private JButton button2;
 	private JButton buttonNext;
-	private JLabel label;
+	private JLabel labelQuestion;
 	private JButton buttonExit;
 	private JLabel timesCorrect;
 	private JLabel wordsLeft;
-
-	// TODO: 11/11/2018 add separate panels for each type of question to simplify button action listeners
 
 	private Vector<Word> wordlist = new Vector<>();
 	private Vector<Word> buttonText = new Vector<>(); //keeps track of what words are used on which button
@@ -31,11 +29,13 @@ public class FlashCardsGUI {
 	private String questionType;
 	private HashMap<Word, Integer> wordmap = new HashMap<>();
 
-
+	private boolean preposition = true;
+	private boolean verb = false;
+	private boolean noun = false;
 
 	public FlashCardsGUI() {
 
-		setWordlist(true, true, true);
+		setWordlist(preposition, verb, noun);
 		setWordmap();
 		resetButtons();
 
@@ -54,8 +54,6 @@ public class FlashCardsGUI {
 	private void resetButtons() {
 
 		Random rand = new Random();
-		System.out.println(wordmap.values());
-		System.out.println(wordlist.size());
 
 		buttonText.clear();
 
@@ -119,7 +117,7 @@ public class FlashCardsGUI {
 		button2.setText("das " + wordlist.elementAt(randWord).getWord());
 		buttonText.add(wordlist.elementAt(randWord));
 
-		label.setText(wordlist.elementAt(randWord).getDefinition());
+		labelQuestion.setText(wordlist.elementAt(randWord).getDefinition());
 
 		timesCorrect.setText("Times correct: " + wordmap.get(correctWord));
 		wordsLeft.setText("Words left: " + (wordlist.size() - 2));
@@ -153,11 +151,11 @@ public class FlashCardsGUI {
 				buttonText.add(wordlist.elementAt(rand2));
 
 				if (wordlist.elementAt(randWord) instanceof Noun) {
-					label.setText(((Noun) wordlist.elementAt(randWord)).getArticle() + " " +
+					labelQuestion.setText(((Noun) wordlist.elementAt(randWord)).getArticle() + " " +
 							wordlist.elementAt(randWord).getWord());
 				}
 				else {
-					label.setText(wordlist.elementAt(randWord).getWord());
+					labelQuestion.setText(wordlist.elementAt(randWord).getWord());
 				}
 
 				break;
@@ -171,11 +169,11 @@ public class FlashCardsGUI {
 				buttonText.add(wordlist.elementAt(rand2));
 
 				if (wordlist.elementAt(randWord) instanceof Noun) {
-					label.setText(((Noun) wordlist.elementAt(randWord)).getArticle() + " " +
+					labelQuestion.setText(((Noun) wordlist.elementAt(randWord)).getArticle() + " " +
 							wordlist.elementAt(randWord).getWord());
 				}
 				else {
-					label.setText(wordlist.elementAt(randWord).getWord());
+					labelQuestion.setText(wordlist.elementAt(randWord).getWord());
 				}
 
 				break;
@@ -189,11 +187,11 @@ public class FlashCardsGUI {
 				buttonText.add(wordlist.elementAt(randWord));
 
 				if (wordlist.elementAt(randWord) instanceof Noun) {
-					label.setText(((Noun) wordlist.elementAt(randWord)).getArticle() + " " +
+					labelQuestion.setText(((Noun) wordlist.elementAt(randWord)).getArticle() + " " +
 							wordlist.elementAt(randWord).getWord());
 				}
 				else {
-					label.setText(wordlist.elementAt(randWord).getWord());
+					labelQuestion.setText(wordlist.elementAt(randWord).getWord());
 				}
 
 				break;
@@ -253,7 +251,7 @@ public class FlashCardsGUI {
 					button2.setText(wordlist.elementAt(rand2).getWord());
 					buttonText.add(wordlist.elementAt(rand2));
 				}
-				label.setText(wordlist.elementAt(randWord).getDefinition());
+				labelQuestion.setText(wordlist.elementAt(randWord).getDefinition());
 				break;
 			}
 			case 1: {
@@ -287,7 +285,7 @@ public class FlashCardsGUI {
 					buttonText.add(wordlist.elementAt(rand2));
 				}
 
-				label.setText(wordlist.elementAt(randWord).getDefinition());
+				labelQuestion.setText(wordlist.elementAt(randWord).getDefinition());
 				break;
 			}
 			case 2: {
@@ -321,7 +319,7 @@ public class FlashCardsGUI {
 					buttonText.add(wordlist.elementAt(randWord));
 				}
 
-				label.setText(wordlist.elementAt(randWord).getDefinition());
+				labelQuestion.setText(wordlist.elementAt(randWord).getDefinition());
 				break;
 			}
 		}
@@ -339,8 +337,7 @@ public class FlashCardsGUI {
 			}
 
 			if (wordlist.size() < 3) {
-				System.out.println("You win");
-				System.exit(0);
+				winDialogue();
 			}
 			resetButtons();
 		}
@@ -414,9 +411,28 @@ public class FlashCardsGUI {
 	}
 
 	private void setWordmap() {
+
+		wordmap.clear();
+
 		for (Word w : wordlist) {
-			wordmap.put(w, 0);
+			wordmap.put(w, 4);
 		}
+	}
+
+	private void winDialogue() {
+
+		int choice = JOptionPane.showOptionDialog(null, "Reset cards?", "You Won!", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+		if (choice == JOptionPane.YES_OPTION) {
+			setWordlist(preposition, verb, noun);
+			setWordmap();
+		}
+		else {
+			System.exit(0);
+		}
+
+
 	}
 
 
