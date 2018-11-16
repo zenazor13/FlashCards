@@ -4,6 +4,7 @@ import words.Verb;
 import words.Word;
 
 import javax.swing.*;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,6 +23,7 @@ public class FlashCardsGUI {
 	private JButton buttonExit;
 	private JLabel timesCorrect;
 	private JLabel wordsLeft;
+	private JButton settings;
 
 	private Vector<Word> wordlist = new Vector<>();
 	private Vector<Word> buttonText = new Vector<>(); //keeps track of what words are used on which button
@@ -46,6 +48,8 @@ public class FlashCardsGUI {
 		button1.addActionListener(e -> checkCorrect(1));
 
 		button2.addActionListener(e -> checkCorrect(2));
+
+		settings.addActionListener(e -> settingsDialogue());
 
 		buttonExit.addActionListener(e -> System.exit(0));
 
@@ -431,6 +435,47 @@ public class FlashCardsGUI {
 		else {
 			System.exit(0);
 		}
+
+
+	}
+
+	private void settingsDialogue() {
+
+		JFrame settingsFrame = new JFrame();
+		settingsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel settingsPanel = new JPanel();
+
+		JCheckBox prepBox = new JCheckBox("prep", preposition);
+		JCheckBox verbBox = new JCheckBox("verb", verb);
+		JCheckBox nounBox = new JCheckBox("noun", noun);
+
+		JButton OK = new JButton("OK");
+
+		settingsPanel.add(prepBox);
+		settingsPanel.add(verbBox);
+		settingsPanel.add(nounBox);
+		settingsPanel.add(OK);
+
+		settingsFrame.add(settingsPanel);
+		settingsFrame.pack();
+		settingsFrame.setVisible(true);
+
+		OK.addActionListener(e -> {
+			preposition = prepBox.isSelected();
+			verb = verbBox.isSelected();
+			noun = nounBox.isSelected();
+
+			wordlist.clear();
+			wordmap.clear();
+
+			setWordlist(preposition, verb, noun);
+			setWordmap();
+			resetButtons();
+
+			settingsFrame.dispose();
+		});
+
+
 
 
 	}
