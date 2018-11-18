@@ -1,10 +1,9 @@
 import words.Noun;
-import words.Preposition;
+import words.Prep;
 import words.Verb;
 import words.Word;
 
 import javax.swing.*;
-import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -31,13 +30,15 @@ public class FlashCardsGUI {
 	private String questionType;
 	private HashMap<Word, Integer> wordmap = new HashMap<>();
 
-	private boolean preposition = true;
+	private boolean prep = true;
 	private boolean verb = false;
 	private boolean noun = false;
 
+	private Random rand = new Random();
+
 	public FlashCardsGUI() {
 
-		setWordlist(preposition, verb, noun);
+		setWordlist(prep, verb, noun);
 		setWordmap();
 		resetButtons();
 
@@ -56,8 +57,6 @@ public class FlashCardsGUI {
 	}
 
 	private void resetButtons() {
-
-		Random rand = new Random();
 
 		buttonText.clear();
 
@@ -94,9 +93,7 @@ public class FlashCardsGUI {
 	}
 
 	private void getQuestionType() {
-		Random rand = new Random();
-		int type = rand.nextInt(3);
-		switch (type) {
+		switch (rand.nextInt(3)) {
 			case 0: {
 				questionType = "pickArticle";
 				break;
@@ -130,8 +127,6 @@ public class FlashCardsGUI {
 
 	private void pickDefinition(int randWord) {
 
-		Random rand = new Random();
-
 		// pick random definitions to also be displayed
 		int rand1 = rand.nextInt(wordlist.size());
 		int rand2 = rand.nextInt(wordlist.size());
@@ -143,9 +138,7 @@ public class FlashCardsGUI {
 		}
 
 		// pick a random button to be correct
-		int randCorrect = rand.nextInt(3);
-
-		switch (randCorrect) {
+		switch (rand.nextInt(3)) {
 			case 0: {
 				button0.setText(wordlist.elementAt(randWord).getDefinition());
 				buttonText.add(wordlist.elementAt(randWord));
@@ -212,7 +205,6 @@ public class FlashCardsGUI {
 
 	private void pickWord(int randWord) {
 
-		Random rand = new Random();
 
 		// pick random words to be displayed
 		int rand1 = rand.nextInt(wordlist.size());
@@ -223,9 +215,7 @@ public class FlashCardsGUI {
 			rand2 = rand.nextInt(wordlist.size());
 		}
 
-		int randCorrect = rand.nextInt(3);
-
-		switch (randCorrect) {
+		switch (rand.nextInt(3)) {
 			case 0: {
 				if (wordlist.elementAt(randWord) instanceof Noun) {
 					button0.setText(((Noun) wordlist.elementAt(randWord)).getArticle()
@@ -350,11 +340,11 @@ public class FlashCardsGUI {
 		}
 	}
 
-	private void setWordlist(boolean preposition, boolean verb, boolean noun) {
+	private void setWordlist(boolean prep, boolean verb, boolean noun) {
 
 
 	String defaultPath = "C:\\Users\\Admin\\IdeaProjects\\FlashCards\\csv";
-	String prepositionPath = defaultPath + "\\Preposition.csv";
+	String prepPath = defaultPath + "\\Prep.csv";
 	String verbPath = defaultPath + "\\Verb.csv";
 	String nounPath = defaultPath + "\\Noun.csv";
 
@@ -363,13 +353,13 @@ public class FlashCardsGUI {
 	String line = "";
 	String csvSplitBy = ",";
 
-	if (preposition) {
-		try (BufferedReader br = new BufferedReader(new FileReader(prepositionPath))) {
+	if (prep) {
+		try (BufferedReader br = new BufferedReader(new FileReader(prepPath))) {
 
 			while ((line = br.readLine()) != null) {
 				String[] words = line.split(csvSplitBy);
 
-				Preposition p = new Preposition(words[0], words[1]);
+				Prep p = new Prep(words[0], words[1]);
 				wordlist.addElement(p);
 			}
 		} catch (FileNotFoundException e) {
@@ -429,7 +419,7 @@ public class FlashCardsGUI {
 				JOptionPane.QUESTION_MESSAGE, null, null, null);
 
 		if (choice == JOptionPane.YES_OPTION) {
-			setWordlist(preposition, verb, noun);
+			setWordlist(prep, verb, noun);
 			setWordmap();
 		}
 		else {
@@ -442,10 +432,11 @@ public class FlashCardsGUI {
 	private void settingsDialogue() {
 
 		JFrame settingsFrame = new JFrame();
-		settingsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		settingsFrame.setTitle("Settings");
+		settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPanel settingsPanel = new JPanel();
 
-		JCheckBox prepBox = new JCheckBox("prep", preposition);
+		JCheckBox prepBox = new JCheckBox("prep", prep);
 		JCheckBox verbBox = new JCheckBox("verb", verb);
 		JCheckBox nounBox = new JCheckBox("noun", noun);
 
@@ -458,17 +449,18 @@ public class FlashCardsGUI {
 
 		settingsFrame.add(settingsPanel);
 		settingsFrame.pack();
+		settingsFrame.setLocationRelativeTo(null);
 		settingsFrame.setVisible(true);
 
 		OK.addActionListener(e -> {
-			preposition = prepBox.isSelected();
+			prep = prepBox.isSelected();
 			verb = verbBox.isSelected();
 			noun = nounBox.isSelected();
 
 			wordlist.clear();
 			wordmap.clear();
 
-			setWordlist(preposition, verb, noun);
+			setWordlist(prep, verb, noun);
 			setWordmap();
 			resetButtons();
 

@@ -20,8 +20,10 @@ public class Main {
 			public void run() {
 				JFrame frame = new JFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setTitle("FlashCards");
 				frame.getContentPane().add(new FlashCardsGUI().panelMain);
 				frame.pack();
+				frame.setLocationRelativeTo(null);
 				frame.setVisible(true);
 			}
 		});
