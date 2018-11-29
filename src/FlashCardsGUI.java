@@ -25,18 +25,20 @@ public class FlashCardsGUI {
 	private Vector<Word> preplist = new Vector<>();
 	private Vector<Word> verblist = new Vector<>();
 	private Vector<Word> nounlist = new Vector<>();
+	private Vector<Word> adlist = new Vector<>();
 	private Vector<Word> otherlist = new Vector<>();
 	private Vector<Word> buttonText = new Vector<>(); //keeps track of what words are used on which button
 	private Word correctWord = new Word();
-	private Word rand1 = new Word();
-	private Word rand2 = new Word();
+	private Word randWord1 = new Word();
+	private Word randWord2 = new Word();
 	private String questionType;
-	private HashMap<Word, Integer> wordmap = new HashMap<>();
+	private HashMap<Word, Integer> wordmap = new HashMap<>(); //keeps track of the amount of correct answers per word
 
 
-	private boolean prep = false;
+	private boolean prep = true;
 	private boolean verb = false;
-	private boolean noun = true;
+	private boolean noun = false;
+	private boolean ad = false;
 	private boolean other = false;
 
 
@@ -44,7 +46,7 @@ public class FlashCardsGUI {
 
 	public FlashCardsGUI() {
 
-		setWordlist(prep, verb, noun, other);
+		setWordlist(prep, verb, noun, ad, other);
 		setWordmap();
 		resetButtons();
 
@@ -115,45 +117,34 @@ public class FlashCardsGUI {
 
 	private void getRandomWords() {
 
+		Vector<Word> list = new Vector<>();
 		correctWord = wordlist.elementAt(rand.nextInt(wordlist.size()));
 
 		if (correctWord instanceof Prep) {
-			rand1 = preplist.elementAt(rand.nextInt(preplist.size()));
-			rand2 = preplist.elementAt(rand.nextInt(preplist.size()));
-
-			while (rand1.equals(correctWord) || rand2.equals(correctWord) || rand1.equals(rand2)) {
-				rand1 = preplist.elementAt(rand.nextInt(preplist.size()));
-				rand2 = preplist.elementAt(rand.nextInt(preplist.size()));
-			}
+			list = preplist;
 		}
 		else if (correctWord instanceof Verb) {
-			rand1 = verblist.elementAt(rand.nextInt(verblist.size()));
-			rand2 = verblist.elementAt(rand.nextInt(verblist.size()));
-
-			while (rand1.equals(correctWord) || rand2.equals(correctWord) || rand1 == rand2) {
-				rand1 = verblist.elementAt(rand.nextInt(verblist.size()));
-				rand2 = verblist.elementAt(rand.nextInt(verblist.size()));
-			}
+			list = verblist;
 		}
 		else if (correctWord instanceof Noun) {
-			rand1 = nounlist.elementAt(rand.nextInt(nounlist.size()));
-			rand2 = nounlist.elementAt(rand.nextInt(nounlist.size()));
-
-			while (rand1.equals(correctWord) || rand2.equals(correctWord) || rand1 == rand2) {
-				rand1 = nounlist.elementAt(rand.nextInt(nounlist.size()));
-				rand2 = nounlist.elementAt(rand.nextInt(nounlist.size()));
-			}
+			list = nounlist;
+		}
+		else if (correctWord instanceof Ad) {
+			list = adlist;
 		}
 		else if (correctWord instanceof Other) {
-			rand1 = otherlist.elementAt(rand.nextInt(otherlist.size()));
-			rand2 = otherlist.elementAt(rand.nextInt(otherlist.size()));
-
-			while (rand1.equals(correctWord) || rand2.equals(correctWord) || rand1 == rand2) {
-				rand1 = otherlist.elementAt(rand.nextInt(otherlist.size()));
-				rand2 = otherlist.elementAt(rand.nextInt(otherlist.size()));
-			}
+			list = otherlist;
 		}
 
+		randWord1 = list.elementAt(rand.nextInt(list.size()));
+		randWord2 = list.elementAt(rand.nextInt(list.size()));
+
+		while (randWord1.equals(correctWord) || randWord2.equals(correctWord) || randWord1.equals(randWord2)
+				|| randWord1.getDefinition().equalsIgnoreCase(randWord2.getDefinition())) {
+			randWord1 = list.elementAt(rand.nextInt(list.size()));
+			randWord2 = list.elementAt(rand.nextInt(list.size()));
+		}
+		
 	}
 
 	private void pickArticle() {
@@ -168,7 +159,7 @@ public class FlashCardsGUI {
 		labelQuestion.setText(correctWord.getDefinition());
 
 		timesCorrect.setText("Times correct: " + wordmap.get(correctWord));
-		wordsLeft.setText("Words left: " + (wordlist.size() - 2));
+		wordsLeft.setText("Words left: " + (wordlist.size()));
 
 	}
 
@@ -179,10 +170,10 @@ public class FlashCardsGUI {
 			case 0: {
 				button0.setText(correctWord.getDefinition());
 				buttonText.add(correctWord);
-				button1.setText(rand1.getDefinition());
-				buttonText.add(rand1);
-				button2.setText(rand2.getDefinition());
-				buttonText.add(rand2);
+				button1.setText(randWord1.getDefinition());
+				buttonText.add(randWord1);
+				button2.setText(randWord2.getDefinition());
+				buttonText.add(randWord2);
 
 				if (correctWord instanceof Noun) {
 					labelQuestion.setText(((Noun) correctWord).getArticle() + " " +
@@ -195,12 +186,12 @@ public class FlashCardsGUI {
 				break;
 			}
 			case 1: {
-				button0.setText(rand1.getDefinition());
-				buttonText.add(rand1);
+				button0.setText(randWord1.getDefinition());
+				buttonText.add(randWord1);
 				button1.setText(correctWord.getDefinition());
 				buttonText.add(correctWord);
-				button2.setText(rand2.getDefinition());
-				buttonText.add(rand2);
+				button2.setText(randWord2.getDefinition());
+				buttonText.add(randWord2);
 
 				if (correctWord instanceof Noun) {
 					labelQuestion.setText(((Noun) correctWord).getArticle() + " " +
@@ -213,10 +204,10 @@ public class FlashCardsGUI {
 				break;
 			}
 			case 2: {
-				button0.setText(rand1.getDefinition());
-				buttonText.add(rand1);
-				button1.setText(rand2.getDefinition());
-				buttonText.add(rand2);
+				button0.setText(randWord1.getDefinition());
+				buttonText.add(randWord1);
+				button1.setText(randWord2.getDefinition());
+				buttonText.add(randWord2);
 				button2.setText(correctWord.getDefinition());
 				buttonText.add(correctWord);
 
@@ -236,7 +227,7 @@ public class FlashCardsGUI {
 		}
 
 		timesCorrect.setText("Times correct: " + wordmap.get(correctWord));
-		wordsLeft.setText("Words left: " + (wordlist.size() - 2));
+		wordsLeft.setText("Words left: " + (wordlist.size()));
 
 	}
 
@@ -254,36 +245,36 @@ public class FlashCardsGUI {
 					buttonText.add(correctWord);
 				}
 
-				if (rand1 instanceof Noun) {
-					button1.setText(((Noun) rand1).getArticle()
-							+ " " + rand1.getWord());
-					buttonText.add(rand1);
+				if (randWord1 instanceof Noun) {
+					button1.setText(((Noun) randWord1).getArticle()
+							+ " " + randWord1.getWord());
+					buttonText.add(randWord1);
 				}
 				else {
-					button1.setText(rand1.getWord());
-					buttonText.add(rand1);
+					button1.setText(randWord1.getWord());
+					buttonText.add(randWord1);
 				}
 
-				if (rand2 instanceof Noun) {
-					button2.setText(((Noun) rand2).getArticle()
-							+ " " + rand2.getWord());
+				if (randWord2 instanceof Noun) {
+					button2.setText(((Noun) randWord2).getArticle()
+							+ " " + randWord2.getWord());
 				}
 				else {
-					button2.setText(rand2.getWord());
-					buttonText.add(rand2);
+					button2.setText(randWord2.getWord());
+					buttonText.add(randWord2);
 				}
 				labelQuestion.setText(correctWord.getDefinition());
 				break;
 			}
 			case 1: {
-				if (rand1 instanceof Noun) {
-					button0.setText(((Noun) rand1).getArticle()
-							+ " " + rand1.getWord());
-					buttonText.add(rand1);
+				if (randWord1 instanceof Noun) {
+					button0.setText(((Noun) randWord1).getArticle()
+							+ " " + randWord1.getWord());
+					buttonText.add(randWord1);
 				}
 				else {
-					button0.setText(rand1.getWord());
-					buttonText.add(rand1);
+					button0.setText(randWord1.getWord());
+					buttonText.add(randWord1);
 				}
 
 				if (correctWord instanceof Noun) {
@@ -296,38 +287,38 @@ public class FlashCardsGUI {
 					buttonText.add(correctWord);
 				}
 
-				if (rand2 instanceof Noun) {
-					button2.setText(((Noun) rand2).getArticle()
-							+ " " + rand2.getWord());
-					buttonText.add(rand2);
+				if (randWord2 instanceof Noun) {
+					button2.setText(((Noun) randWord2).getArticle()
+							+ " " + randWord2.getWord());
+					buttonText.add(randWord2);
 				}
 				else {
-					button2.setText(rand2.getWord());
-					buttonText.add(rand2);
+					button2.setText(randWord2.getWord());
+					buttonText.add(randWord2);
 				}
 
 				labelQuestion.setText(correctWord.getDefinition());
 				break;
 			}
 			case 2: {
-				if (rand1 instanceof Noun) {
-					button0.setText(((Noun) rand1).getArticle()
-							+ " " + rand1.getWord());
-					buttonText.add(rand1);
+				if (randWord1 instanceof Noun) {
+					button0.setText(((Noun) randWord1).getArticle()
+							+ " " + randWord1.getWord());
+					buttonText.add(randWord1);
 				}
 				else {
-					button0.setText(rand1.getWord());
-					buttonText.add(rand1);
+					button0.setText(randWord1.getWord());
+					buttonText.add(randWord1);
 				}
 
-				if (rand2 instanceof Noun) {
-					button1.setText(((Noun) rand2).getArticle()
-							+ " " + rand2.getWord());
-					buttonText.add(rand2);
+				if (randWord2 instanceof Noun) {
+					button1.setText(((Noun) randWord2).getArticle()
+							+ " " + randWord2.getWord());
+					buttonText.add(randWord2);
 				}
 				else {
-					button1.setText(rand2.getWord());
-					buttonText.add(rand2);
+					button1.setText(randWord2.getWord());
+					buttonText.add(randWord2);
 				}
 
 				if (correctWord instanceof Noun) {
@@ -346,7 +337,7 @@ public class FlashCardsGUI {
 		}
 
 		timesCorrect.setText("Times correct: " + wordmap.get(correctWord));
-		wordsLeft.setText("Words left: " + (wordlist.size() - 2));
+		wordsLeft.setText("Words left: " + (wordlist.size()));
 	}
 
 	private void checkCorrect(int element) {
@@ -389,17 +380,17 @@ public class FlashCardsGUI {
 			}
 
 
-		if (wordmap.get(correctWord) == 3) {
+		if (wordmap.get(correctWord) == 1) {
 			wordlist.removeElement(correctWord);
 		}
 
-		if (wordlist.size() < 3) {
+		if (wordlist.size() == 0) {
 			winDialogue();
 		}
 
 	}
 
-	private void setWordlist(boolean prep, boolean verb, boolean noun, boolean other) {
+	private void setWordlist(boolean prep, boolean verb, boolean noun, boolean ad, boolean other) {
 
 
 		wordlist.clear();
@@ -408,6 +399,7 @@ public class FlashCardsGUI {
 		String prepPath = defaultPath + "\\Prep.csv";
 		String verbPath = defaultPath + "\\Verb.csv";
 		String nounPath = defaultPath + "\\Noun.csv";
+		String adPath = defaultPath + "\\Ad.csv";
 		String otherPath = defaultPath + "\\Other.csv";
 
 
@@ -466,6 +458,23 @@ public class FlashCardsGUI {
 			}
 		}
 
+		if (ad) {
+			try (BufferedReader br = new BufferedReader(new FileReader(adPath))) {
+
+				while ((line = br.readLine()) != null) {
+					String[] words = line.split(csvSplitBy);
+
+					Ad a = new Ad(words[0], words[1]);
+					wordlist.addElement(a);
+					adlist.addElement(a);
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		if (other) {
 			try (BufferedReader br = new BufferedReader(new FileReader(otherPath))) {
 
@@ -502,7 +511,7 @@ public class FlashCardsGUI {
 				JOptionPane.QUESTION_MESSAGE, null, null, null);
 
 		if (choice == JOptionPane.YES_OPTION) {
-			setWordlist(prep, verb, noun, other);
+			setWordlist(prep, verb, noun, ad, other);
 			setWordmap();
 		}
 		else {
@@ -522,6 +531,7 @@ public class FlashCardsGUI {
 		JCheckBox prepBox = new JCheckBox("prep", prep);
 		JCheckBox verbBox = new JCheckBox("verb", verb);
 		JCheckBox nounBox = new JCheckBox("noun", noun);
+		JCheckBox adBox = new JCheckBox("ad", ad);
 		JCheckBox otherBox = new JCheckBox("other", other);
 
 		JButton OK = new JButton("OK");
@@ -529,6 +539,7 @@ public class FlashCardsGUI {
 		settingsPanel.add(prepBox);
 		settingsPanel.add(verbBox);
 		settingsPanel.add(nounBox);
+		settingsPanel.add(adBox);
 		settingsPanel.add(otherBox);
 		settingsPanel.add(OK);
 
@@ -541,9 +552,10 @@ public class FlashCardsGUI {
 			prep = prepBox.isSelected();
 			verb = verbBox.isSelected();
 			noun = nounBox.isSelected();
+			ad = adBox.isSelected();
 			other = otherBox.isSelected();
 
-			setWordlist(prep, verb, noun, other);
+			setWordlist(prep, verb, noun, ad, other);
 			setWordmap();
 			resetButtons();
 
