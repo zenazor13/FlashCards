@@ -34,9 +34,9 @@ public class FlashCardsGUI {
 	private HashMap<Word, Integer> wordmap = new HashMap<>();
 
 
-	private boolean prep = true;
+	private boolean prep = false;
 	private boolean verb = false;
-	private boolean noun = false;
+	private boolean noun = true;
 	private boolean other = false;
 
 
@@ -350,21 +350,53 @@ public class FlashCardsGUI {
 	}
 
 	private void checkCorrect(int element) {
-		if (buttonText.elementAt(element).equals(correctWord)) {
+		if (questionType.equalsIgnoreCase("pickArticle")) {
+			switch (element) {
+				case 0:
+					if (((Noun) correctWord).getArticle().equalsIgnoreCase("der")) {
+						wordmap.put(correctWord, wordmap.get(correctWord) + 1);
+						resetButtons();
+					}
+					else {
+						wordmap.put(correctWord, 0);
+					}
+					break;
+				case 1:
+					if (((Noun) correctWord).getArticle().equalsIgnoreCase("die")) {
+						wordmap.put(correctWord, wordmap.get(correctWord) + 1);
+						resetButtons();
+					}
+					else {
+						wordmap.put(correctWord, 0);
+					}
+					break;
+				case 2:
+					if (((Noun) correctWord).getArticle().equalsIgnoreCase("das")) {
+						wordmap.put(correctWord, wordmap.get(correctWord) + 1);
+						resetButtons();
+					}
+					else {
+						wordmap.put(correctWord, 0);
+					}
+			}
+		}
+		else if (buttonText.elementAt(element).equals(correctWord)) {
 			wordmap.put(correctWord, wordmap.get(correctWord) + 1);
-
-			if (wordmap.get(correctWord) == 5) {
-				wordlist.removeElement(correctWord);
-			}
-
-			if (wordlist.size() < 3) {
-				winDialogue();
-			}
 			resetButtons();
 		}
 		else {
-			wordmap.put(buttonText.elementAt(element), 0);
+				wordmap.put(buttonText.elementAt(element), 0);
+			}
+
+
+		if (wordmap.get(correctWord) == 3) {
+			wordlist.removeElement(correctWord);
 		}
+
+		if (wordlist.size() < 3) {
+			winDialogue();
+		}
+
 	}
 
 	private void setWordlist(boolean prep, boolean verb, boolean noun, boolean other) {
@@ -460,7 +492,7 @@ public class FlashCardsGUI {
 		wordmap.clear();
 
 		for (Word w : wordlist) {
-			wordmap.put(w, 4);
+			wordmap.put(w, 0);
 		}
 	}
 
