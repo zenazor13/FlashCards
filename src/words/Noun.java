@@ -1,7 +1,5 @@
 package words;
 
-import words.Word;
-
 public class Noun extends Word {
 
 	private String article;

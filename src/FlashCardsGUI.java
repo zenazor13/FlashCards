@@ -1,7 +1,4 @@
-import words.Noun;
-import words.Prep;
-import words.Verb;
-import words.Word;
+import words.*;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -28,6 +25,7 @@ public class FlashCardsGUI {
 	private Vector<Word> preplist = new Vector<>();
 	private Vector<Word> verblist = new Vector<>();
 	private Vector<Word> nounlist = new Vector<>();
+	private Vector<Word> otherlist = new Vector<>();
 	private Vector<Word> buttonText = new Vector<>(); //keeps track of what words are used on which button
 	private Word correctWord = new Word();
 	private Word rand1 = new Word();
@@ -35,15 +33,18 @@ public class FlashCardsGUI {
 	private String questionType;
 	private HashMap<Word, Integer> wordmap = new HashMap<>();
 
+
 	private boolean prep = true;
 	private boolean verb = false;
 	private boolean noun = false;
+	private boolean other = false;
+
 
 	private Random rand = new Random();
 
 	public FlashCardsGUI() {
 
-		setWordlist(prep, verb, noun);
+		setWordlist(prep, verb, noun, other);
 		setWordmap();
 		resetButtons();
 
@@ -141,6 +142,15 @@ public class FlashCardsGUI {
 			while (rand1.equals(correctWord) || rand2.equals(correctWord) || rand1 == rand2) {
 				rand1 = nounlist.elementAt(rand.nextInt(nounlist.size()));
 				rand2 = nounlist.elementAt(rand.nextInt(nounlist.size()));
+			}
+		}
+		else if (correctWord instanceof Other) {
+			rand1 = otherlist.elementAt(rand.nextInt(otherlist.size()));
+			rand2 = otherlist.elementAt(rand.nextInt(otherlist.size()));
+
+			while (rand1.equals(correctWord) || rand2.equals(correctWord) || rand1 == rand2) {
+				rand1 = otherlist.elementAt(rand.nextInt(otherlist.size()));
+				rand2 = otherlist.elementAt(rand.nextInt(otherlist.size()));
 			}
 		}
 
@@ -357,69 +367,90 @@ public class FlashCardsGUI {
 		}
 	}
 
-	private void setWordlist(boolean prep, boolean verb, boolean noun) {
+	private void setWordlist(boolean prep, boolean verb, boolean noun, boolean other) {
 
 
-	String defaultPath = "C:\\Users\\Admin\\IdeaProjects\\FlashCards\\csv";
-	String prepPath = defaultPath + "\\Prep.csv";
-	String verbPath = defaultPath + "\\Verb.csv";
-	String nounPath = defaultPath + "\\Noun.csv";
+		wordlist.clear();
+
+		String defaultPath = "C:\\Users\\Admin\\IdeaProjects\\FlashCards\\csv";
+		String prepPath = defaultPath + "\\Prep.csv";
+		String verbPath = defaultPath + "\\Verb.csv";
+		String nounPath = defaultPath + "\\Noun.csv";
+		String otherPath = defaultPath + "\\Other.csv";
 
 
+		String line = "";
+		String csvSplitBy = ",";
 
-	String line = "";
-	String csvSplitBy = ",";
 
-	if (prep) {
-		try (BufferedReader br = new BufferedReader(new FileReader(prepPath))) {
+		if (prep) {
+			try (BufferedReader br = new BufferedReader(new FileReader(prepPath))) {
 
-			while ((line = br.readLine()) != null) {
-				String[] words = line.split(csvSplitBy);
+				while ((line = br.readLine()) != null) {
+					String[] words = line.split(csvSplitBy);
 
-				Prep p = new Prep(words[0], words[1]);
-				wordlist.addElement(p);
-				preplist.addElement(p);
+					Prep p = new Prep(words[0], words[1]);
+					wordlist.addElement(p);
+					preplist.addElement(p);
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-	}
 
-	if (verb) {
-		try (BufferedReader br = new BufferedReader(new FileReader(verbPath))) {
+		if (verb) {
+			try (BufferedReader br = new BufferedReader(new FileReader(verbPath))) {
 
-			while ((line = br.readLine()) != null) {
-				String[] words = line.split(csvSplitBy);
+				while ((line = br.readLine()) != null) {
+					String[] words = line.split(csvSplitBy);
 
-				Verb v = new Verb(words[0], words[1]);
-				wordlist.addElement(v);
-				verblist.addElement(v);
+					Verb v = new Verb(words[0], words[1]);
+					wordlist.addElement(v);
+					verblist.addElement(v);
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-	}
 
-	if (noun) {
-		try (BufferedReader br = new BufferedReader(new FileReader(nounPath))) {
+		if (noun) {
+			try (BufferedReader br = new BufferedReader(new FileReader(nounPath))) {
 
-			while ((line = br.readLine()) != null) {
-				String[] words = line.split(csvSplitBy);
+				while ((line = br.readLine()) != null) {
+					String[] words = line.split(csvSplitBy);
 
-				Noun n = new Noun(words[0], words[1], words[2]);
-				wordlist.addElement(n);
-				nounlist.addElement(n);
+					Noun n = new Noun(words[0], words[1], words[2]);
+					wordlist.addElement(n);
+					nounlist.addElement(n);
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-	}
+
+		if (other) {
+			try (BufferedReader br = new BufferedReader(new FileReader(otherPath))) {
+
+				while ((line = br.readLine()) != null) {
+					String[] words = line.split(csvSplitBy);
+
+					Other o = new Other(words[0], words[1]);
+					wordlist.addElement(o);
+					otherlist.addElement(o);
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 
 
 	}
@@ -439,7 +470,7 @@ public class FlashCardsGUI {
 				JOptionPane.QUESTION_MESSAGE, null, null, null);
 
 		if (choice == JOptionPane.YES_OPTION) {
-			setWordlist(prep, verb, noun);
+			setWordlist(prep, verb, noun, other);
 			setWordmap();
 		}
 		else {
@@ -459,12 +490,14 @@ public class FlashCardsGUI {
 		JCheckBox prepBox = new JCheckBox("prep", prep);
 		JCheckBox verbBox = new JCheckBox("verb", verb);
 		JCheckBox nounBox = new JCheckBox("noun", noun);
+		JCheckBox otherBox = new JCheckBox("other", other);
 
 		JButton OK = new JButton("OK");
 
 		settingsPanel.add(prepBox);
 		settingsPanel.add(verbBox);
 		settingsPanel.add(nounBox);
+		settingsPanel.add(otherBox);
 		settingsPanel.add(OK);
 
 		settingsFrame.add(settingsPanel);
@@ -476,11 +509,9 @@ public class FlashCardsGUI {
 			prep = prepBox.isSelected();
 			verb = verbBox.isSelected();
 			noun = nounBox.isSelected();
+			other = otherBox.isSelected();
 
-			wordlist.clear();
-			wordmap.clear();
-
-			setWordlist(prep, verb, noun);
+			setWordlist(prep, verb, noun, other);
 			setWordmap();
 			resetButtons();
 
