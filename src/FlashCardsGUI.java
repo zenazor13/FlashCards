@@ -1,10 +1,7 @@
 import words.*;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Vector;
@@ -34,7 +31,7 @@ public class FlashCardsGUI {
 	private String questionType;
 	private HashMap<Word, Integer> wordmap = new HashMap<>(); //keeps track of the amount of correct answers per word
 
-
+	private int chapter = 1;
 	private boolean prep = true;
 	private boolean verb = false;
 	private boolean noun = false;
@@ -395,20 +392,26 @@ public class FlashCardsGUI {
 
 		wordlist.clear();
 
-		String defaultPath = "C:\\Users\\Admin\\IdeaProjects\\FlashCards\\csv";
-		String prepPath = defaultPath + "\\Prep.csv";
-		String verbPath = defaultPath + "\\Verb.csv";
-		String nounPath = defaultPath + "\\Noun.csv";
-		String adPath = defaultPath + "\\Ad.csv";
-		String otherPath = defaultPath + "\\Other.csv";
+		String defaultPath = "C:\\Users\\Admin\\IdeaProjects\\FlashCards\\csv\\Ch" + chapter + "_";
+		String prepPath = defaultPath + "Prep.csv";
+		String verbPath = defaultPath + "Verb.csv";
+		String nounPath = defaultPath + "Noun.csv";
+		String adPath = defaultPath + "Ad.csv";
+		String otherPath = defaultPath + "Other.csv";
+
+		File prepFile = new File(prepPath);
+		File verbFile = new File(verbPath);
+		File nounFile = new File(nounPath);
+		File adFile = new File(adPath);
+		File otherFile = new File(otherPath);
 
 
 		String line = "";
 		String csvSplitBy = ",";
 
 
-		if (prep) {
-			try (BufferedReader br = new BufferedReader(new FileReader(prepPath))) {
+		if (prep && prepFile.isFile()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(prepFile))) {
 
 				while ((line = br.readLine()) != null) {
 					String[] words = line.split(csvSplitBy);
@@ -424,8 +427,8 @@ public class FlashCardsGUI {
 			}
 		}
 
-		if (verb) {
-			try (BufferedReader br = new BufferedReader(new FileReader(verbPath))) {
+		if (verb && verbFile.isFile()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(verbFile))) {
 
 				while ((line = br.readLine()) != null) {
 					String[] words = line.split(csvSplitBy);
@@ -441,8 +444,8 @@ public class FlashCardsGUI {
 			}
 		}
 
-		if (noun) {
-			try (BufferedReader br = new BufferedReader(new FileReader(nounPath))) {
+		if (noun && nounFile.isFile()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(nounFile))) {
 
 				while ((line = br.readLine()) != null) {
 					String[] words = line.split(csvSplitBy);
@@ -458,8 +461,8 @@ public class FlashCardsGUI {
 			}
 		}
 
-		if (ad) {
-			try (BufferedReader br = new BufferedReader(new FileReader(adPath))) {
+		if (ad && adFile.isFile()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(adFile))) {
 
 				while ((line = br.readLine()) != null) {
 					String[] words = line.split(csvSplitBy);
@@ -475,8 +478,8 @@ public class FlashCardsGUI {
 			}
 		}
 
-		if (other) {
-			try (BufferedReader br = new BufferedReader(new FileReader(otherPath))) {
+		if (other && otherFile.isFile()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(otherFile))) {
 
 				while ((line = br.readLine()) != null) {
 					String[] words = line.split(csvSplitBy);
@@ -528,6 +531,9 @@ public class FlashCardsGUI {
 		settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPanel settingsPanel = new JPanel();
 
+		String[] chapters = { "All Chapters", "Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5" };
+
+		JComboBox chaptersBox = new JComboBox(chapters);
 		JCheckBox prepBox = new JCheckBox("prep", prep);
 		JCheckBox verbBox = new JCheckBox("verb", verb);
 		JCheckBox nounBox = new JCheckBox("noun", noun);
@@ -535,6 +541,9 @@ public class FlashCardsGUI {
 		JCheckBox otherBox = new JCheckBox("other", other);
 
 		JButton OK = new JButton("OK");
+
+		settingsPanel.add(chaptersBox);
+		chaptersBox.setSelectedIndex(chapter);
 
 		settingsPanel.add(prepBox);
 		settingsPanel.add(verbBox);
@@ -549,6 +558,7 @@ public class FlashCardsGUI {
 		settingsFrame.setVisible(true);
 
 		OK.addActionListener(e -> {
+			chapter = chaptersBox.getSelectedIndex();
 			prep = prepBox.isSelected();
 			verb = verbBox.isSelected();
 			noun = nounBox.isSelected();
@@ -557,9 +567,15 @@ public class FlashCardsGUI {
 
 			setWordlist(prep, verb, noun, ad, other);
 			setWordmap();
-			resetButtons();
 
-			settingsFrame.dispose();
+			if (wordlist.size() == 0) {
+				JOptionPane.showMessageDialog(null, "Invalid selection.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				settingsFrame.dispose();
+			}
+
+			resetButtons();
 		});
 
 
