@@ -31,10 +31,12 @@ public class FlashCardsGUI {
 	private String questionType;
 	private HashMap<Word, Integer> wordmap = new HashMap<>(); //keeps track of the amount of correct answers per word
 
-	private int chapter = 1;
+	private int correctGuesses = 1;  //how many times needed to guess correctly before the word is removed from wordmap
+
+	private int chapter = 0;
 	private boolean prep = true;
 	private boolean verb = false;
-	private boolean noun = false;
+	private boolean noun = true;
 	private boolean ad = false;
 	private boolean other = false;
 
@@ -377,7 +379,7 @@ public class FlashCardsGUI {
 			}
 
 
-		if (wordmap.get(correctWord) == 1) {
+		if (wordmap.get(correctWord) == correctGuesses) {
 			wordlist.removeElement(correctWord);
 		}
 
@@ -531,9 +533,13 @@ public class FlashCardsGUI {
 		settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPanel settingsPanel = new JPanel();
 
-		String[] chapters = { "All Chapters", "Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5" };
+		String[] chapters = { "All Chapters", "Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5",
+				"Chapter 6", "Chapter 7", "Chapter 8", "Chapter 9", "Chapter 10" };
+
+		String[] correctGuessesNeeded = { "1", "2", "3", "4", "5" };
 
 		JComboBox chaptersBox = new JComboBox(chapters);
+		JComboBox correctGuessesNeededBox = new JComboBox(correctGuessesNeeded);
 		JCheckBox prepBox = new JCheckBox("prep", prep);
 		JCheckBox verbBox = new JCheckBox("verb", verb);
 		JCheckBox nounBox = new JCheckBox("noun", noun);
@@ -544,6 +550,9 @@ public class FlashCardsGUI {
 
 		settingsPanel.add(chaptersBox);
 		chaptersBox.setSelectedIndex(chapter);
+
+		settingsPanel.add(correctGuessesNeededBox);
+		correctGuessesNeededBox.setSelectedIndex(correctGuesses);
 
 		settingsPanel.add(prepBox);
 		settingsPanel.add(verbBox);
@@ -559,6 +568,7 @@ public class FlashCardsGUI {
 
 		OK.addActionListener(e -> {
 			chapter = chaptersBox.getSelectedIndex();
+			correctGuesses = correctGuessesNeededBox.getSelectedIndex();
 			prep = prepBox.isSelected();
 			verb = verbBox.isSelected();
 			noun = nounBox.isSelected();
