@@ -31,7 +31,7 @@ public class FlashCardsGUI {
 	private String questionType;
 	private HashMap<Word, Integer> wordmap = new HashMap<>(); //keeps track of the amount of correct answers per word
 
-	private int correctGuesses = 1;  //how many times needed to guess correctly before the word is removed from wordmap
+	private int correctGuesses = 2;  //how many times needed to guess correctly before the word is removed from wordmap
 
 	private int chapter = 0;
 	private boolean prep = true;
@@ -546,7 +546,8 @@ public class FlashCardsGUI {
 		JCheckBox adBox = new JCheckBox("ad", ad);
 		JCheckBox otherBox = new JCheckBox("other", other);
 
-		JButton OK = new JButton("OK");
+		JButton allButton = new JButton("All");
+		JButton okButton = new JButton("OK");
 
 		settingsPanel.add(chaptersBox);
 		chaptersBox.setSelectedIndex(chapter);
@@ -554,19 +555,40 @@ public class FlashCardsGUI {
 		settingsPanel.add(correctGuessesNeededBox);
 		correctGuessesNeededBox.setSelectedIndex(correctGuesses);
 
+		settingsPanel.add(allButton);
+
 		settingsPanel.add(prepBox);
 		settingsPanel.add(verbBox);
 		settingsPanel.add(nounBox);
 		settingsPanel.add(adBox);
 		settingsPanel.add(otherBox);
-		settingsPanel.add(OK);
+		settingsPanel.add(okButton);
 
 		settingsFrame.add(settingsPanel);
 		settingsFrame.pack();
 		settingsFrame.setLocationRelativeTo(null);
 		settingsFrame.setVisible(true);
 
-		OK.addActionListener(e -> {
+		allButton.addActionListener(e -> {
+
+			if (prepBox.isSelected() && verbBox.isSelected() && nounBox.isSelected()
+					&& adBox.isSelected() && otherBox.isSelected()) {
+				prepBox.setSelected(false);
+				verbBox.setSelected(false);
+				nounBox.setSelected(false);
+				adBox.setSelected(false);
+				otherBox.setSelected(false);
+			}
+			else {
+				prepBox.setSelected(true);
+				verbBox.setSelected(true);
+				nounBox.setSelected(true);
+				adBox.setSelected(true);
+				otherBox.setSelected(true);
+			}
+		});
+
+		okButton.addActionListener(e -> {
 			chapter = chaptersBox.getSelectedIndex();
 			correctGuesses = correctGuessesNeededBox.getSelectedIndex();
 			prep = prepBox.isSelected();
