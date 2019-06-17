@@ -34,6 +34,7 @@ public class FlashCardsGUI {
 	private int correctGuesses = 2;  //how many times needed to guess correctly before the word is removed from wordmap
 
 	private int chapter = 0;
+	private int book = 0;
 	private boolean prep = true;
 	private boolean verb = false;
 	private boolean noun = true;
@@ -391,10 +392,22 @@ public class FlashCardsGUI {
 
 	private void setWordlist(boolean prep, boolean verb, boolean noun, boolean ad, boolean other) {
 
+		String bookName = "";
+
+		switch (book) {
+			case 0:
+				bookName = "Stationen";
+				break;
+			case 1:
+				bookName = "Deutsch Heute";
+				break;
+			default:
+				System.out.println("bookName out of bounds");
+		}
 
 		wordlist.clear();
 
-		String defaultPath = "C:\\Users\\Admin\\IdeaProjects\\FlashCards\\csv\\Ch" + chapter + "_";
+		String defaultPath = "C:\\Users\\Admin\\IdeaProjects\\FlashCards\\csv\\" + bookName + "\\Ch" + chapter + "_";
 		String prepPath = defaultPath + "Prep.csv";
 		String verbPath = defaultPath + "Verb.csv";
 		String nounPath = defaultPath + "Noun.csv";
@@ -426,6 +439,9 @@ public class FlashCardsGUI {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+				System.out.println("Empty line in Ch" + chapter + "_Prep.csv");
 			}
 		}
 
@@ -443,6 +459,9 @@ public class FlashCardsGUI {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+				System.out.println("Empty line in Ch" + chapter + "_Verb.csv");
 			}
 		}
 
@@ -460,6 +479,9 @@ public class FlashCardsGUI {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+				System.out.println("Empty line in Ch" + chapter + "_Noun.csv");
 			}
 		}
 
@@ -477,6 +499,9 @@ public class FlashCardsGUI {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+				System.out.println("Empty line in Ch" + chapter + "_Ad.csv");
 			}
 		}
 
@@ -494,6 +519,9 @@ public class FlashCardsGUI {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+				System.out.println("Empty line in Ch" + chapter + "_Other.csv");
 			}
 		}
 
@@ -533,11 +561,14 @@ public class FlashCardsGUI {
 		settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPanel settingsPanel = new JPanel();
 
+		String[] books = { "Stationen", "Deutsch Heute" };
+
 		String[] chapters = { "All Chapters", "Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5",
-				"Chapter 6", "Chapter 7", "Chapter 8", "Chapter 9", "Chapter 10" };
+				"Chapter 6", "Chapter 7", "Chapter 8", "Chapter 9", "Chapter 10", "Chapter 11", "Chapter 12" };
 
 		String[] correctGuessesNeeded = { "1", "2", "3", "4", "5" };
 
+		JComboBox bookBox = new JComboBox(books);
 		JComboBox chaptersBox = new JComboBox(chapters);
 		JComboBox correctGuessesNeededBox = new JComboBox(correctGuessesNeeded);
 		JCheckBox prepBox = new JCheckBox("prep", prep);
@@ -548,6 +579,9 @@ public class FlashCardsGUI {
 
 		JButton allButton = new JButton("All");
 		JButton okButton = new JButton("OK");
+
+		settingsPanel.add(bookBox);
+		bookBox.setSelectedIndex(book);
 
 		settingsPanel.add(chaptersBox);
 		chaptersBox.setSelectedIndex(chapter);
@@ -589,6 +623,7 @@ public class FlashCardsGUI {
 		});
 
 		okButton.addActionListener(e -> {
+			book = bookBox.getSelectedIndex();
 			chapter = chaptersBox.getSelectedIndex();
 			correctGuesses = correctGuessesNeededBox.getSelectedIndex();
 			prep = prepBox.isSelected();
